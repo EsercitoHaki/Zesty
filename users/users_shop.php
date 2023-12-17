@@ -62,12 +62,25 @@ if (isset($_POST['add_to_cart'])) {
 	<title>Nguyên liệu</title>
 </head>
 <style>
-	
 	.page_item{
-		margin-right: 10px;
+		margin: 0 5px;
+    padding: 10px 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    text-decoration: none;
 	}
+	.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+.page_item.active {
+    background-color: #163020;
+    color: #fff;
+}
 	.page_item:hover{
-		text-decoration: none;
+		background-color: #e9ecef;
 	}
 	strong{
 		margin-right: 10px;
@@ -151,23 +164,17 @@ if (isset($_POST['add_to_cart'])) {
                 ?>
 
             </div>
+			<div class="pagination">
 			<?php
 				for($num = 1; $num <= $totalPage; $num++){
-					?>
-					<?php
-						if($num != $current_page){
-							?>
-								<a class="page_item" href="?per_page=<?=$item_per_page?>&page=<?=$num?>"><?=$num?></a>
-							<?php
-						}else{
-							?>
-								<strong><?=$num?></strong>
-							<?php
-						}
-						?>
-					<?php
+					if($num != $current_page){
+						echo "<a class='page_item' href='?per_page=$item_per_page&page=$num'>$num</a>";
+					}else{
+						echo "<a class='page_item active' href='?per_page=$item_per_page&page=$num'>$num</a>";
+					}
 				}
 			?>
+			</div>
         </div>
     </div>
 

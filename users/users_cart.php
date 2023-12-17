@@ -160,9 +160,7 @@
 														<input type="hidden" name="action" value="update">
 														<input type="hidden" name="MaGioHang" value="<?php echo $row["MaGioHang"] ?>">
 														<center>
-															<input name="new_quantity" type="text" class="form-control text-center quantity-amount" value="<?php echo $row["SoLuong"] ?>" style="margin-left: 80px;">
-														</center>
-													</form>
+														<input name="new_quantity" type="number" class="form-control  text-center quantity-amount" value="<?php echo $row["SoLuong"] ?>" min="1" style="margin-left: 80px;">													</form>
 												</div>
 											</td>
 
@@ -230,23 +228,13 @@
 										echo "</div>";
 										?> </div>
 								</div>
-								<?php
-								if (empty($_SESSION["cart"])) {
-								?>
-									<div class="alert alert-warning" role="alert">
-										Bạn phải thêm món vào giỏ đã!
-									</div>
-								<?php
-								} else {
-								?>
+								
 									<div class="col-md-12">
 										<a href="users_checkout.php" class="btn btn-black btn-lg py-3 btn-block">
 											Xác nhận thông tin
 										</a>
 									</div>
-								<?php
-								}
-								?>
+								
 							</div>
 						</div>
 					</div>
