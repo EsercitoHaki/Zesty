@@ -52,19 +52,12 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets_admin/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets_admin/img/favicon.png">
     <title>Login Page</title>
-    <!--     Fonts and icons     -->
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
-    <!-- Nucleo Icons -->
     <link href="../assets_admin/css/nucleo-icons.css" rel="stylesheet" />
     <link href="../assets_admin/css/nucleo-svg.css" rel="stylesheet" />
-    <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
-    <!-- CSS Files -->
     <link id="pagestyle" href="../assets_admin/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
-    <!-- Nepcha Analytics (nepcha.com) -->
-    <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
     <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 
     <style>
@@ -84,10 +77,12 @@
         }
 
         .image-container {
-            width: 50%;
+            width: 100%;
             height: 100vh;
             overflow: hidden; /* Ngăn chặn cuộn xuống */
             position: relative;
+            margin-left: -320px; /* Đẩy hình ảnh sang trái */
+            
         }
 
         .image-container img {
@@ -98,8 +93,9 @@
         }
 
         .login-container {
-            width: 50%;
+            width: 100%;
             padding: 20px;
+            padding-left: 200px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -117,12 +113,14 @@
 
         .card-body {
             text-align: left;
+            color: #fff;
         }
 
         .form-label {
             margin-bottom: 8px;
             display: block;
             font-weight: bold;
+            color: #fff;
         }
 
         .form-control {
@@ -130,16 +128,19 @@
             padding: 10px;
             margin-bottom: 10px;
             box-sizing: border-box;
+            color: #163020;
+            
         }
 
         .btn-login {
             width: 100%;
             padding: 10px;
-            background-color: #333;
+            background-color: #163020;
             color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 7px;
             cursor: pointer;
+            transition: all 0.3s ease-in-out;
         }
         .text-right {
             text-align: right;
@@ -163,11 +164,11 @@
                 <div class="card-body">
                     <div class="input-group input-group-dynamic mb-4">
                         <label class="form-label">Email/SDT</label>
-                        <input type="text" name="tendangnhap" class="form-control">
+                        <input type="text" name="tendangnhap" class="form-control" style="color: #163020;">
                     </div>
-                    <div class="input-group input-group-dynamic mb-4">
+                    <div class="input-group input-group-dynamic mb-4" >
                         <label class="form-label">Mật Khẩu</label>
-                        <input type="text" name="matkhau" class="form-control">
+                        <input type="password" name="matkhau" class="form-control">
                     </div>
                     <div class="form-check mb-3">
                     <div class="form-check mb-3">
@@ -181,15 +182,15 @@
                         <h4></h4>
                     </div>
                     <div class="text-right">
-                        <a href="" class="text-primary text-gradient font-weight-bold">Quên mật khẩu</a>
+                        <a href="" class="text text font-weight-bold" style="color:white ;">Quên mật khẩu</a>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-lg bg-gradient-primary btn-login">Đăng Nhập</button>
+                        <button type="submit" class="btn btn-lg bg btn-login">Đăng Nhập</button>
                     </div>
                     <div class="card-footer text-center pt-0 px-lg-2 px-1">
                         <p class="mb-2 text-sm mx-auto">
                         Bạn chưa có tài khoản?
-                        <a href="../pages/sign-in.html" class="text-primary text-gradient font-weight-bold">Đăng ký</a>
+                        <a href="../pages/signin.php" class="text text font-weight-bold" style="color:#163020 ;">Đăng ký</a>
                     </div>
                 </div>
             </form>
