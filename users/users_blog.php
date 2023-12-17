@@ -21,13 +21,12 @@
 						<div class="col-lg-5">
 							<div class="intro-excerpt">
 								<h1>Blog</h1>
-								<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-								<p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+								<p class="mb-4">Khám phá thế giới ẩm thực qua những bí quyết nấu ăn độc đáo và những công thức ngon tuyệt. Hãy cùng nhau khám phá hương vị mới và tạo ra những bữa ăn tuyệt vời từ những chiếc nồi và chảo của bạn!</p>
 							</div>
 						</div>
 						<div class="col-lg-7">
 							<div class="hero-img-wrap">
-								<img src="images/couch.png" class="img-fluid">
+								<img src="../images/Blog/" class="img-fluid">
 							</div>
 						</div>
 					</div>
