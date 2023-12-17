@@ -97,6 +97,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            
         }
 
         .card-header {
@@ -165,7 +166,7 @@
                     </div>
                     <div class="input-group input-group-dynamic mb-4" >
                         <label class="form-label">Mật Khẩu</label>
-                        <input type="password" name="matkhau" class="form-control">
+                        <input type="password" name="matkhau" class="form-control" style="color: #163020;">
                     </div>
                     <div class="form-check mb-3">
                     <div class="form-check mb-3">
@@ -187,13 +188,22 @@
                     <div class="card-footer text-center pt-0 px-lg-2 px-1">
                         <p class="mb-2 text-sm mx-auto">
                         Bạn chưa có tài khoản?
-                        <a href="../pages/signin.php" class="text text font-weight-bold" style="color:#163020 ;">Đăng ký</a>
+                        <a href="../auth/signup.php" class="text text font-weight-bold" style="color:#163020 ;">Đăng ký</a>
                     </div>
                 </div>
             </form>
         </div>
-    </div>
-
+    </div><div id="alert" class="alert alert-danger d-none" role="alert">
+        Vui lòng chọn loại người dùng
+</div>
+    <script>
+document.querySelector('form').addEventListener('submit', function(e) {
+    if (!document.querySelector('input[name="user_type"]:checked')) {
+        e.preventDefault();
+        document.getElementById('alert').classList.remove('d-none');
+    }
+});
+</script>
     <script src="../assets_admin/js/core/popper.min.js"></script>
     <script src="../assets_admin/js/core/bootstrap.min.js"></script>
     <script src="../assassets_adminets/js/plugins/perfect-scrollbar.min.js"></script>
