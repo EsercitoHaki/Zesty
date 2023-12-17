@@ -9,12 +9,41 @@
     include_once('../components/connection.php');
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $tendangnhap = $_POST['tendangnhap'];
-        $matkhau = $_POST['matkhau'];
-        $hoten = $_POST['hoten'];
-        $email = $_POST['email'];
-        $sdt = $_POST['sdt'];
-        $diachi = $_POST['diachi'];
+        $TenSanPham = $_POST['tensanpham'];
+        $Gia = $_POST['gia'];
+        $DinhLuong = $_POST['dinhluong'];
+        $ThongTin = $_POST['thongtin'];
+        $MaDanhMuc = $_POST['madanhmuc'];
+
+
+        $file = $_FILES['filename'];
+            $size_allow = 10; //Cho phép 10MB
+
+            //Đổi tên trước khi upload 
+            $filename = $file['name'];
+            $filename = explode('.', $filename);
+            $ext = end($filename);
+            $new_file = $_POST['tieude'].'.'.$ext;
+            
+
+            $allow_ext = ['png', 'jpg', 'jpeg', 'gif', 'ppt'];
+            if(in_array($ext, $allow_ext)){
+                //Thoả mãn điều kiện định dạng
+                $size = $file['size']/1024/1024; //Đổi từ byte sang MB
+
+                if($size<=$size_allow){
+                    //Thoả mãn điều kiện size
+
+                    $upload = move_uploaded_file($file['tmp_name'], '../images/Product/'.$new_file);
+                    if(!$upload){
+                        $errors = 'upload_err';
+                    }
+                }else{
+                    $errors = 'size_err';
+                }
+            }else{
+                $errors[] = 'ext_err';
+            }
 
         // Thực hiện truy vấn để thêm mới thành viên
         $query = "INSERT INTO thanhvien (TenDangNhap, MatKhau, HoTen, Email, SDT, DiaChiNhanHang) VALUES ('$tendangnhap', '$matkhau', '$hoten', '$email', '$sdt', '$diachi')";
@@ -111,31 +140,49 @@
             <form action="" method="post">
                 <div class="input-group input-group-static mb-4">
                     <label>Tên sản phẩm</label>
-                    <input type="text" name="tendangnhap" class="form-control">
+                    <input type="text" name="tensanpham" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
                     <label>Giá</label>
-                    <input type="text" name="matkhau" class="form-control">
+                    <input type="text" name="gia" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
                     <label>Định lượng</label>
-                    <input type="text" name="hoten" class="form-control">
+                    <input type="text" name="dinhluong" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
                     <label>Thông tin</label>
-                    <input type="text" name="email" class="form-control">
+                    <input type="text" name="thongtin" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
                     <label>Ảnh</label>
-                    <input type="text" name="sdt" class="form-control">
+                    <input type="file" name="filename" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
-                    <label>Trạng thái</label>
-                    <input type="text" name="diachi" class="form-control">
+                    <div class="input-group input-group-static mb-4">
+                        <label for="exampleFormControlSelect1" class="ms-0">Danh mục</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <?php
+                                $sqlDM = "SELECT * FROM danhmuc";
+                                $resultDanhMuc = $conn->query($sqlDM) or die("Can't get categories");
+                                while($rowDanhMuc = $resultDanhMuc->fetch_assoc()){
+                                    ?>
+                                        <option><?=$rowDanhMuc["MaDanhMuc"]?> - <?=$rowDanhMuc["TenDanhMuc"]?></option>
+                                    <?php
+                                }
+                            ?>
+                        </select>
+                    </div>
                 </div>
                 <div class="input-group input-group-static mb-4">
-                    <label>Mã danh mục</label>
-                    <input type="text" name="diachi" class="form-control">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="hoatdong" id="customRadio1">
+                        <label class="custom-control-label" for="customRadio1">Hoạt động</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="ngunghoatdong" id="customRadio2">
+                        <label class="custom-control-label" for="customRadio2">Không hoạt động</label>
+                    </div>
                 </div>
                 <div>
                     <button type="submit" class="btn btn-outline-primary" onclick="location.href='admin_add_users.php';">Tạo mới</button>

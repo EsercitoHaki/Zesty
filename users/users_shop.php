@@ -1,10 +1,3 @@
-<!-- /*
-* Bootstrap 5
-* Template Name: Furni
-* Template Author: Untree.co
-* Template URI: https://untree.co/
-* License: https://creativecommons.org/licenses/by/3.0/
-*/ -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,42 +11,104 @@
 		$total = mysqli_query($conn, "SELECT * FROM sanpham");
 		$total = $total->num_rows;
 		$totalPage = ceil($total/$item_per_page);
+		if (!isset($_SESSION['cart'])) {
+			$_SESSION['cart'] = array();
+		}
+		
+		// Check if the 'add' action is triggered
+		if (isset($_GET['action']) && $_GET['action'] == 'add') {
+			$product_id = $_GET['MaSanPham'];
+		
+			// Check if the product is already in the cart
+			if (isset($_SESSION['cart'][$product_id])) {
+				// If the product is already in the cart, increase the quantity
+				$_SESSION['cart'][$product_id]['SoLuong']++;
+			} else {
+				// If the product is not in the cart, add it
+				// You might want to fetch the product details from the database here
+				$_SESSION['cart'][$product_id] = array(
+					'SoLuong' => 1,
+					// 'name' => $product_name,
+					// 'price' => $product_price,
+					// Add more product details as needed...
+				);
+			}
+		}
+
+if (isset($_POST['add_to_cart'])) {
+    $MaSanPham = $_POST['MaSanPham'];
+    $SoLuong = $_POST['SoLuong'];
+
+    // Check if the cart is already set in the session
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = array();
+    }
+
+    // Check if the item is already in the cart
+    if (isset($_SESSION['cart'][$MaSanPham])) {
+        // Update the quantity of the item
+        $_SESSION['cart'][$MaSanPham]['SoLuong'] += $SoLuong;
+    } else {
+        // Add the item to the cart
+        $_SESSION['cart'][$MaSanPham] = array(
+            'SoLuong' => $SoLuong,
+            // Add other item data here
+        );
+    }
+}
+		
+		// Redirect back to the shop page
 	?>
 	<title>Nguyên liệu</title>
 </head>
+<style>
+	
+	.page_item{
+		margin-right: 10px;
+	}
+	.page_item:hover{
+		text-decoration: none;
+	}
+	strong{
+		margin-right: 10px;
+	}
+	strong:hover{
+		text-decoration: none;
+	}
+	.category{
+		margin-bottom: 20px;
+	}
+	.li{
+		text-decoration: none;
+	}
 
+</style>
 	<body>
 
 			<div class="hero">
 				<div class="container">
 					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Shop</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
+						<h1>Shop</h1>
 					</div>
 				</div>
 			</div>
-
-		
+			<table>
+    <thead>
+       
+    </thead>
 
 		<div class="untree_co-section product-section before-footer-section">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
-                    <div>
-                        <ul>
+                <div class="category">
+                        <ul >
                             <?php
                             $sqlDM = "SELECT * FROM danhmuc";
                             $resultDM = $conn->query($sqlDM) or die("Can't get recordset");
                             if ($resultDM->num_rows > 0) {
                                 while ($row = $resultDM->fetch_assoc()) {
                                     ?>
-                                    <li>
+                                    <li >
                                         <a href="users_shop.php?category=<?php echo $row['MaDanhMuc']; ?>"><?php echo $row["TenDanhMuc"] ?></a>
                                     </li>
                                 <?php
@@ -63,9 +118,8 @@
                             }
                             ?>
                         </ul>
-                    </div>
                 </div>
-
+					
                 <?php
                 // Kiểm tra nếu có tham số category trong URL
                 if (isset($_GET['category'])) {
@@ -83,7 +137,7 @@
 							<a class="product-item" href="add_to_cart.php?product_id=<?=$row["MaSanPham"]; ?>">
 								<img src="../images/Product/<?php echo $row["Anh"] ?>" class="img-fluid product-thumbnail">
 								<h3 class="product-title"><?php echo $row["TenSanPham"] ?></h3>
-								<strong class="product-price"><?php echo $row["Gia"] ?></strong>
+								<strong class="product-price"><?php echo number_format($row["Gia"]) ?>VNĐ</strong>
 								<span class="icon-cross">
 									<img src="../assets/images/cross.svg" class="img-fluid">
 								</span>
