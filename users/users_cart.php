@@ -79,19 +79,17 @@
 				if (isset($_POST['MaGioHang'])) {
 					$MaGioHang = $_POST['MaGioHang'];
 
-					// Prepare a delete statement
-					$sql = "DELETE FROM giohang WHERE MaGioHang = ?";
-
-					// Initialize a statement
+					$sql = "DELETE FROM donhang WHERE MaGioHang = ?";
 					$stmt = $conn->prepare($sql);
-
-					// Bind the item ID to the statement
 					$stmt->bind_param("i", $MaGioHang);
-
-					// Execute the statement
 					$stmt->execute();
+					$stmt->close();
 
-					// Close the statement
+					// Then, delete the row in the giohang table
+					$sql = "DELETE FROM giohang WHERE MaGioHang = ?";
+					$stmt = $conn->prepare($sql);
+					$stmt->bind_param("i", $MaGioHang);
+					$stmt->execute();
 					$stmt->close();
 					header("Location: users_cart.php");
 					exit;
@@ -130,7 +128,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th class="product-thumbnail" >Ảnh</th>
+									<th class="product-thumbnail">Ảnh</th>
 									<th class="product-name">Sản Phẩm</th>
 									<th class="product-price">Giá</th>
 									<th class="product-quantity">Số Lượng</th>
@@ -140,9 +138,10 @@
 							<tbody>
 
 								<?php
+								$cartTotal = 0;
+
 								if ($result->num_rows > 0) {
 									while ($row = $result->fetch_assoc()) {
-										$cartTotal = 0;
 										$itemTotal = $row["SoLuong"] * $row["Gia"];
 										$cartTotal += $itemTotal;
 								?>
@@ -161,7 +160,7 @@
 														<input type="hidden" name="action" value="update">
 														<input type="hidden" name="MaGioHang" value="<?php echo $row["MaGioHang"] ?>">
 														<center>
-														<input name="new_quantity" type="text" class="form-control text-center quantity-amount" value="<?php echo $row["SoLuong"] ?>" style="margin-left: 80px;">
+															<input name="new_quantity" type="text" class="form-control text-center quantity-amount" value="<?php echo $row["SoLuong"] ?>" style="margin-left: 80px;">
 														</center>
 													</form>
 												</div>
@@ -217,9 +216,6 @@
 								<div class="row">
 									<div class="col-md-12 text-right border-bottom mb-5">
 										<?php
-
-
-										// Display the overall cart total
 										echo "<div class='text-right border-bottom mb-5'>";
 										echo "<h3 class='text-black h4 text-uppercase'>Tổng</h3>";
 										echo "</div>";
@@ -234,13 +230,23 @@
 										echo "</div>";
 										?> </div>
 								</div>
-								<div class="row">
+								<?php
+								if (empty($_SESSION["cart"])) {
+								?>
+									<div class="alert alert-warning" role="alert">
+										Bạn phải thêm món vào giỏ đã!
+									</div>
+								<?php
+								} else {
+								?>
 									<div class="col-md-12">
 										<a href="users_checkout.php" class="btn btn-black btn-lg py-3 btn-block">
-										Xác nhận thông tin
+											Xác nhận thông tin
 										</a>
 									</div>
-								</div>
+								<?php
+								}
+								?>
 							</div>
 						</div>
 					</div>
@@ -249,25 +255,24 @@
 		</div>
 	</form>
 
-	<!-- Start Footer Section -->
 	<footer class="footer-section">
 		<div class="container relative">
 
 			<div class="sofa-img">
-				<img src="images/sofa.png" alt="Image" class="img-fluid">
+				<img src="../images/Product/cuoitrang.png" alt="Image" class="img-fluid">
 			</div>
 
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="subscription-form">
-						<h3 class="d-flex align-items-center"><span class="me-1"><img src="images/envelope-outline.svg" alt="Image" class="img-fluid"></span><span>Subscribe to Newsletter</span></h3>
+						<h3 class="d-flex align-items-center"><span class="me-1"><img src="../assets/images/envelope-outline.svg" alt="Image" class="img-fluid"></span><span>Đăng ký thôi bạn ơi</span></h3>
 
 						<form action="#" class="row g-3">
 							<div class="col-auto">
-								<input type="text" class="form-control" placeholder="Enter your name">
+								<input type="text" class="form-control" placeholder="Điền tên của bạn">
 							</div>
 							<div class="col-auto">
-								<input type="email" class="form-control" placeholder="Enter your email">
+								<input type="email" class="form-control" placeholder="Email nữa">
 							</div>
 							<div class="col-auto">
 								<button class="btn btn-primary">
@@ -282,8 +287,8 @@
 
 			<div class="row g-5 mb-5">
 				<div class="col-lg-4">
-					<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Furni<span>.</span></a></div>
-					<p class="mb-4">Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant</p>
+					<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Zesty<span>.</span></a></div>
+					<p class="mb-4">Zesty - Người bạn đồng hành tuyệt vời nhất của bạn trong hành trình ngon miệng.</p>
 
 					<ul class="list-unstyled custom-social">
 						<li><a href="#"><span class="fa fa-brands fa-facebook-f"></span></a></li>
@@ -297,58 +302,35 @@
 					<div class="row links-wrap">
 						<div class="col-6 col-sm-6 col-md-3">
 							<ul class="list-unstyled">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Services</a></li>
+								<li><a href="#">Nguyên liệu</a></li>
+								<li><a href="#">Combo</a></li>
+							</ul>
+						</div>
+
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
 								<li><a href="#">Blog</a></li>
-								<li><a href="#">Contact us</a></li>
+								<li><a href="#">Liên hệ</a></li>
 							</ul>
 						</div>
 
 						<div class="col-6 col-sm-6 col-md-3">
 							<ul class="list-unstyled">
-								<li><a href="#">Support</a></li>
-								<li><a href="#">Knowledge base</a></li>
+								<li><a href="#">Hỗ trợ</a></li>
+								<li><a href="#">Kho thông tin</a></li>
+							</ul>
+						</div>
+
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
 								<li><a href="#">Live chat</a></li>
-							</ul>
-						</div>
-
-						<div class="col-6 col-sm-6 col-md-3">
-							<ul class="list-unstyled">
-								<li><a href="#">Jobs</a></li>
-								<li><a href="#">Our team</a></li>
-								<li><a href="#">Leadership</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-							</ul>
-						</div>
-
-						<div class="col-6 col-sm-6 col-md-3">
-							<ul class="list-unstyled">
-								<li><a href="#">Nordic Chair</a></li>
-								<li><a href="#">Kruzo Aero</a></li>
-								<li><a href="#">Ergonomic Chair</a></li>
+								<li><a href="#">Thông tin</a></li>
 							</ul>
 						</div>
 					</div>
 				</div>
 
 			</div>
-
-			<div class="border-top copyright">
-				<div class="row pt-4">
-					<div class="col-lg-6">
-						</p>
-					</div>
-
-					<div class="col-lg-6 text-center text-lg-end">
-						<ul class="list-unstyled d-inline-flex ms-auto">
-							<li class="me-4"><a href="#">Terms &amp; Conditions</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-						</ul>
-					</div>
-
-				</div>
-			</div>
-
 		</div>
 	</footer>
 	<!-- End Footer Section -->

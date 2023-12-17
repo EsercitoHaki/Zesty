@@ -1,10 +1,4 @@
-<!-- /*
-* Bootstrap 5
-* Template Name: Furni
-* Template Author: Untree.co
-* Template URI: https://untree.co/
-* License: https://creativecommons.org/licenses/by/3.0/
-*/ -->
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -72,7 +66,7 @@
 							while($row = $result->fetch_assoc()){
 								?>
 									<div class="col-12 col-md-4 col-lg-3 mb-5">
-											<a class="product-item" href="assets/cart.html">
+											<a class="product-item" href="#">
 												<img src="images/Product/<?php echo $row["Anh"]?>" class="img-fluid product-thumbnail">
 												<h3 class="product-title"><?php echo $row["TenSanPham"] ?></h3>
 												<strong class="product-price"><?php echo $row["Gia"]?></strong>
@@ -115,7 +109,7 @@
 									while($row = $result1->fetch_assoc()){
 										?>
 											<div class="col-12 col-md-4 col-lg-3 mb-5">
-													<a class="product-item" href="assets/cart.html">
+													<a class="product-item" href="#">
 														<img src="images/Product/<?php echo $row["Anh"]?>" class="img-fluid product-thumbnail">
 														<h3 class="product-title"><?php echo $row["TenSanPham"] ?></h3>
 														<strong class="product-price"><?php echo $row["Gia"]?></strong>

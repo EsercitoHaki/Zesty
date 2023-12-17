@@ -1,171 +1,250 @@
 <?php
-session_start();
-require_once("../components/connection.php");
-$result = $conn->query("SELECT * FROM thanhvien WHERE tendangnhap = '" . $_SESSION['tendangnhap'] . "'");
-
-$sql1 = "SELECT * FROM donhang";
-$result1 = $conn->query($sql1);
+include_once('../components/assets.php');
+include_once('../components/connection.php');
+include_once('../components/header_user.php');
+$sql = "SELECT * FROM thanhvien WHERE MaThanhVien = $MaThanhVien";
+$result = $conn->query($sql) or die("Can't get recordset");
 ?>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thông tin đặt hàng</title>
-  <link href="../assets/img/favicon.png" rel="icon">
-  <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="../assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
-  <link href="../assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
-  <link href="../assets/css/main.css" rel="stylesheet">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #22092C;
-      margin: 0;
-      color: #ffffff;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Untree.co">
+	<link rel="shortcut icon" href="favicon.png">
 
-    .order-form {
-      background-color: #872341;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      width: 500px;
-      text-align: left;
-    }
+	<meta name="description" content="" />
+	<meta name="keywords" content="bootstrap, bootstrap4" />
 
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th,
-    td {
-      border: 1px solid #FBA1B7;
-      padding: 10px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #BE3144;
-    }
-  </style>
+	<!-- Bootstrap CSS -->
+	<link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+	<link href="../assets/css/tiny-slider.css" rel="stylesheet">
+	<link href="../assets/css/style.css" rel="stylesheet">
+	<title> </title>
 </head>
 
 <body>
-  <form action="users_process_checkout.php" method="post">
-    <div class="order-form">
-      <h2>Thông tin đặt hàng</h2>
+	<!-- Start Hero Section -->
+	<div class="hero">
+		<div class="container">
+			<div class="row justify-content-between">
+				<div class="col-lg-5">
+					<div class="intro-excerpt">
+						<h1>Checkout</h1>
+					</div>
+				</div>
+				<div class="col-lg-7">
 
-      <input type="hidden" id="NgayDatHang" name="NgayDatHang" value="<?php echo date('Y-d-m'); ?>">
-      <?php
-      while ($row = $result->fetch_assoc()) {
-      ?>
-        <input type="hidden" id="MaThanhVien" name="MaThanhVien" required value="<?php echo $row["MaThanhVien"]; ?>">
-        <div class="form-group">
-          <label for="HoTen">Tên khách hàng:</label>
-          <input type="text" id="HoTen" name="HoTen" required value="<?php echo $row["HoTen"]; ?>">
-        </div>
-        <div class="form-group">
-          <label for="tel">SDT:</label>
-          <input type="text" id="SDT" name="SDT" required value="<?php echo $row["SDT"]; ?>">
-        </div>
-        <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required value="<?php echo $row["Email"]; ?>">
-        </div>
-        <div class="form-group">
-          <label for="address">Địa chỉ:</label>
-          <input type="text" id="DiaChi" name="DiaChi" required value="<?php echo $row["DiaChi"]; ?>">
-        </div>
-        <div>
-          <div class="form-group">
-            <label for="payment">Phương thức thanh toán:</label>
-            <select id="phuongthucthanhtoan" name="phuongthucthanhtoan" class="form-select" required>
-              <?php
-              $stmt = $conn->prepare("SELECT * FROM phuongthucthanhtoan WHERE TrangThai = 1");
-              $stmt->execute();
-              $payments = $stmt->get_result();
-              while ($payment = $payments->fetch_assoc()) {
-                echo '<option value="' . $payment['MaPhuongThuc'] . '">' . $payment['TenPhuongThuc'] . '</option>';
-              }
-              ?>
-            </select>
-          </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Hero Section -->
+
+	<div class="untree_co-section">
+		<div class="container">
+			<div class="row mb-5">
+				<div class="col-md-12">
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6 mb-5 mb-md-0">
+					<h2 class="h3 mb-3 text-black">Thông tin</h2>
+					<div class="p-3 p-lg-5 border bg-white">
+						<?php
+						$row = $result->fetch_assoc();
+						?>
+						<div class="form-group">
+							<div class="col-md-12">
+								<label for="c_fname" class="text-black">Tên người nhận <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" id="c_fname" name="HoTen" value="<?php echo $row["HoTen"] ?>">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-5">
+								<label for="c_fname" class="text-black">Số điện thoại <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" id="c_fname" name="SDT" value="<?php echo $row["SDT"] ?>">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-md-12">
+								<label for="c_address" class="text-black">Địa chỉ nhận hàng <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" id="c_address" name="DiaChiNhanHang" placeholder="Street address" value="<?php echo $row["DiaChi"] ?>">
+							</div>
+						</div>
+
+						<div class="form-group row mb-5">
+							<div class="col-md-12">
+								<label for="c_email_address" class="text-black">Email <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" id="c_email_address" name="Email" value="<?php echo $row["Email"] ?>">
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="c_order_notes" class="text-black">Ghi chú</label>
+							<textarea name="GhiChu" id="c_order_notes" cols="30" rows="5" class="form-control" placeholder="Bạn cần gì cứ viết..."></textarea>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="row mb-5">
+						<div class="col-md-12">
+							<h2 class="h3 mb-3 text-black">Đơn hàng</h2>
+							<div class="p-3 p-lg-5 border bg-white">
+								<table class="table site-block-order-table mb-5">
+									<thead>
+										<th>Tên sản phẩm</th>
+										<th>Số lượng</th>
+										<th>Định lượng</th>
+										<th>Giá</th>
+									</thead>
+									<tbody>
+										<?php
+										$totalQuantity = 0;
+										$totalPrice = 0;
+										$result = $conn->query(
+										"   SELECT *
+											FROM giohang g 
+											JOIN sanpham s ON g.MaSanPham = s.MaSanPham 
+											WHERE g.MaThanhVien = " . $_SESSION["MaThanhVien"]
+										);
+										if ($result->num_rows > 0) {
+											while ($row = $result->fetch_assoc()) {
+												$totalQuantity += $row['SoLuong'];
+												$totalPrice += $row['Gia'] * $row['SoLuong'];
+										?>
+												<tr>
+													<td><?php echo $row['TenSanPham']; ?></td>
+													<td><?php echo $row['SoLuong']; ?></td>
+													<td><?php echo $row['DinhLuong']; ?></td>
+													<td><?php echo number_format($row['Gia']); ?>đ</td>
+												</tr>
+										<?php
+											}
+										}
+										?>
+										<tr>
+											<td colspan="1">Tổng:</td>
+											<td><?php echo $totalQuantity; ?></td>
+											<td></td>
+											<td><?php echo number_format($totalPrice, 0); ?>đ</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<div class="form-group">
+									<label for="c_diff_country" class="text-black">Phương thức thanh toán <span class="text-danger">*</span></label>
+									<select id="c_diff_country" class="form-control" style="margin-top: 10px; margin-bottom: 10px;">
+										<?php
+										$result = $conn->query("SELECT * FROM phuongthucthanhtoan WHERE TrangThai = 1");
+										if ($result->num_rows > 0) {
+											while ($row = $result->fetch_assoc()) {
+												echo '<option value="' . $row['MaPhuongThuc'] . '">' . $row['TenPhuongThuc'] . '</option>';
+											}
+										}
+										?>
+									</select>
+								</div>
 
 
-          <tbody>
-            <th>
-              <h4>Thông tin sản phẩm</h4>
-            </th>
-            <?php
-            if (isset($_SESSION['cart_item'])) {
-              $totalQuantity = 0;
-              $totalPrice = 0;
-            ?>
-              <table border="1">
-                <tr>
-                  <th>Tên Món Ăn</th>
-                  <th>Mã Món Ăn</th>
-                  <th>Số Lượng</th>
-                  <th>Giá</th>
-                </tr>
-                <?php
-                foreach ($_SESSION['cart_item'] as $item) {
-                  $product = $conn->query("SELECT * FROM MonAn WHERE MaMonAn = " . $item['MaMonAn'])->fetch_assoc();
-                  $totalQuantity += $item['SoLuong'];
-                  $totalPrice += $product['Gia'] * $item['SoLuong'];
-                ?>
-                  <tr>
-                    <td><?php echo $product['TenMonAn']; ?></td>
-                    <td><?php echo $product['MaMonAn']; ?></td>
-                    <td><?php echo $item['SoLuong']; ?></td>
-                    <td><?php echo number_format($product['Gia']); ?>đ</td>
-                  </tr>
-                <?php
-                }
-                ?>
-                <tr>
-                  <td colspan="2">Tổng:</td>
-                  <td><?php echo $totalQuantity; ?></td>
-                  <td><?php echo number_format($totalPrice, 0); ?>đ</td>
-                </tr>
-              </table>
-            <?php
-            }
-            ?>
-          </tbody>
-          <button type="submit" name="hoadon_confirm">Xác nhận</button>
-        </div>
-        <input type="hidden" name="tongdonhang" value="<?= $totalPrice ?>"></input>
-  </form>
+
+
+								<div class="form-group">
+									<button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='users_process_checkout.php'">Đặt đơn luôn</button>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<!-- </form> -->
+		</div>
+	</div>
+
+	<footer class="footer-section">
+		<div class="container relative">
+
+			<div class="sofa-img">
+				<img src="../images/Product/cuoitrang.png" alt="Image" class="img-fluid">
+			</div>
+
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="subscription-form">
+						<h3 class="d-flex align-items-center"><span class="me-1"><img src="../assets/images/envelope-outline.svg" alt="Image" class="img-fluid"></span><span>Đăng ký thôi bạn ơi</span></h3>
+
+						<form action="#" class="row g-3">
+							<div class="col-auto">
+								<input type="text" class="form-control" placeholder="Điền tên của bạn">
+							</div>
+							<div class="col-auto">
+								<input type="email" class="form-control" placeholder="Email nữa">
+							</div>
+							<div class="col-auto">
+								<button class="btn btn-primary">
+									<span class="fa fa-paper-plane"></span>
+								</button>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+
+			<div class="row g-5 mb-5">
+				<div class="col-lg-4">
+					<div class="mb-4 footer-logo-wrap"><a href="#" class="footer-logo">Zesty<span>.</span></a></div>
+					<p class="mb-4">Zesty - Người bạn đồng hành tuyệt vời nhất của bạn trong hành trình ngon miệng.</p>
+
+				</div>
+
+				<div class="col-lg-8">
+					<div class="row links-wrap">
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Nguyên liệu</a></li>
+								<li><a href="#">Combo</a></li>
+							</ul>
+						</div>
+
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Blog</a></li>
+								<li><a href="#">Liên hệ</a></li>
+							</ul>
+						</div>
+
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Hỗ trợ</a></li>
+								<li><a href="#">Kho thông tin</a></li>
+							</ul>
+						</div>
+
+						<div class="col-6 col-sm-6 col-md-3">
+							<ul class="list-unstyled">
+								<li><a href="#">Live chat</a></li>
+								<li><a href="#">Thông tin</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</footer>
+	<!-- End Footer Section -->
+
+
+
+	<script src="js/bootstrap.bundle.min.js"></script>
+	<script src="js/tiny-slider.js"></script>
+	<script src="js/custom.js"></script>
 </body>
 
 </html>
-<?php
-
-      }
-?>
