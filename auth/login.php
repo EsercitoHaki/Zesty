@@ -11,9 +11,12 @@
             $result = mysqli_query($conn, $query);
 
             if (mysqli_num_rows($result) == 1) {
+                $row = mysqli_fetch_assoc($result);
+                $MaAdmin = $row['MaAdmin'];
+                $_SESSION['MaAdmin'] = $MaAdmin;
                 $_SESSION['TenDangNhap'] = $Tendangnhap;
                 $_SESSION['user_type'] = 'admin';
-                header("Location: ../admin/admin_user_list.php");
+                header("Location: ../admin/admin_users_list.php?id=$MaAdmin");
                 exit();
             } else {
                 $_SESSION['Error'] = "Sai tên đăng nhập hoặc mật khẩu";

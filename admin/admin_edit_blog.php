@@ -1,23 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>
-    Admin Zesty
-  </title>
-  <?php
-    include_once('../components/assets_admin.php');
-    include_once('../components/connection.php');
-    // Kiểm tra xem có thông điệp từ trang admin_delete_user.php không
-    if (isset($_GET['message'])) {
-        $message = $_GET['message'];
-        $result = isset($_GET['result']) ? $_GET['result'] : 'danger';
-    }
-  ?>
+    <title>Admin Zesty</title>
+    <?php
+        include_once('../components/assets_admin.php');
+        include_once('../components/connection.php');
+        
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Xử lý khi form được submit
+            $id = $_GET['id'];
+            $Tenblog = $_POST['tieude'];
+            $Noidung = $_POST['noidung'];
+            
+            $file = $_FILES['filename'];
+            $size_allow = 10; //Cho phép 10MB
+
+
+            //Đổi tên trước khi upload 
+            $filename = $file['name'];
+            $filename = explode('.', $filename);
+            $ext = end($filename);
+            $new_file = $_POST['tieude'].'.'.$ext;
+            
+
+            $allow_ext = ['png', 'jpg', 'jpeg', 'gif', 'ppt'];
+            if(in_array($ext, $allow_ext)){
+                //Thoả mãn điều kiện định dạng
+                $size = $file['size']/1024/1024; //Đổi từ byte sang MB
+
+                if($size<=$size_allow){
+                    //Thoả mãn điều kiện size
+
+                    $upload = move_uploaded_file($file['tmp_name'], '../images/Blog/'.$new_file);
+                    if(!$upload){
+                        $errors = 'upload_err';
+                    }
+                }else{
+                    $errors = 'size_err';
+                }
+            }else{
+                $errors[] = 'ext_err';
+            }
+
+            // Thực hiện truy vấn để cập nhật thông tin thành viên
+            $query = "UPDATE blog SET Title = '$Tenblog', NoiDung = '$Noidung', AnhBlog = '$new_file' WHERE MaBlog = '$id'";
+            $result = mysqli_query($conn, $query);
+
+            // Kiểm tra và hiển thị thông báo tương ứng
+            if ($result) {
+                $message = "Cập nhật thông tin người dùng thành công!";
+            } else {
+                $message = "Lỗi! Không thể cập nhật thông tin người dùng.";
+            }
+        } else {
+            // Nếu không phải là form submit, truy xuất thông tin cũ từ cơ sở dữ liệu
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                $query = "SELECT * FROM blog WHERE MaBlog = '$id'";
+                $result = mysqli_query($conn, $query);
+
+                if ($result) {
+                    $row = mysqli_fetch_assoc($result);
+                    $Tenblog = $row['Title'];
+                    $Noidung = $row['NoiDung'];
+                }
+            }
+        }
+    ?>
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
-
-    <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
+<body class="g-sidenav-show bg-gray-100">
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
@@ -30,7 +84,7 @@
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
             <li class="nav-item">
-            <a class="nav-link text-white active bg-gradient-primary" href="admin_users_list.php">
+            <a class="nav-link text-white" href="admin_users_list.php">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                     <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -65,7 +119,7 @@
             </a>
             </li>
             <li class="nav-item">
-            <a class="nav-link text-white " href="admin_blog.php">
+            <a class="nav-link text-white active bg-gradient-primary" href="admin_blog.php">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                     <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -81,71 +135,41 @@
             </a>
             </li>
         </div>
-    </aside>
+        </aside>
         <main class="main-content border-radius-lg ">
             <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
             <div class="container-fluid py-1 px-3">
 
             </div>
             </nav>
-        
-        <!-- End Navbar -->
         <div class="container-fluid py-4">
-            <h3>Danh sách người dùng</h3>
-            <div>
-                <button type="button" class="btn btn-outline-primary" onclick="location.href='admin_add_users.php';">Tạo mới</button>
-            </div>
+            <h3>Cập nhật người dùng</h3>
             <?php if (isset($message)) : ?>
                 <div class="alert alert-<?php echo ($result) ? 'success' : 'danger'; ?> mt-3">
                     <?php echo $message; ?>
                 </div>
             <?php endif; ?>
-            <div class="card">
-                <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">#</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tên đăng nhập</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Mật khẩu</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Họ tên</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Số điện thoại</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Địa chỉ</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Xử lý</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                                $query = "SELECT * FROM thanhvien";
-                                $result = mysqli_query($conn, $query);
-
-                                if ($result) {
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        echo "<tr>";
-                                        echo "<td>" . $row['MaThanhVien'] . "</td>";
-                                        echo "<td>" . $row['TenDangNhap'] . "</td>";
-                                        echo "<td>" . $row['MatKhau'] . "</td>";
-                                        echo "<td>" . $row['HoTen'] . "</td>";
-                                        echo "<td>" . $row['Email'] . "</td>";
-                                        echo "<td>" . $row['SDT'] . "</td>";
-                                        echo "<td>" . $row['DiaChiNhanHang'] . "</td>";
-                                        echo "<td><a href='admin_edit_users.php?id=" . $row['MaThanhVien'] . "'>Sửa</a> | <a href='admin_delete_user.php?id=" . $row['MaThanhVien'] . "'>Xóa</a></td>";
-                                        echo "</tr>";
-                                    }
-
-                                    mysqli_free_result($result);
-                                } else {
-                                    echo "Error: " . mysqli_error($conn);
-                                }
-
-                                // Close the connection
-                                mysqli_close($conn);
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+            <div>
+                <button type="button" class="btn btn-outline-primary" onclick="location.href='admin_blog.php';">Trở về</button>
             </div>
+            <form action="" method="post" enctype="multipart/form-data">
+                <!-- Các trường input với giá trị mặc định là thông tin cũ -->
+                <div class="input-group input-group-static mb-4">
+                    <label>Title</label>
+                    <input type="text" name="tieude" class="form-control" value="<?php echo $Tenblog; ?>">
+                </div>
+                <div class="input-group input-group-static mb-4">
+                    <label>Nội dung</label>
+                    <input type="text" name="noidung" class="form-control" value="<?php echo $Noidung; ?>">
+                </div>
+                <div class="input-group input-group-static mb-4">
+                    <label>Ảnh</label>
+                    <input type="file" name="filename" class="form-control">
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-outline-primary">Cập nhật</button>
+                </div>
+            </form>
         </div>
           <!--   Core JS Files   -->
         <script src="../assets_admin/js/core/popper.min.js" ></script>

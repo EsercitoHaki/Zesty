@@ -9,22 +9,18 @@
     include_once('../components/connection.php');
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $tendangnhap = $_POST['tendangnhap'];
-        $matkhau = $_POST['matkhau'];
-        $hoten = $_POST['hoten'];
-        $email = $_POST['email'];
-        $sdt = $_POST['sdt'];
-        $diachi = $_POST['diachi'];
+        $TenDanhMuc = $_POST['tendanhmuc'];
+        $MoTa = $_POST['mota'];
 
         // Thực hiện truy vấn để thêm mới thành viên
-        $query = "INSERT INTO thanhvien (TenDangNhap, MatKhau, HoTen, Email, SDT, DiaChiNhanHang) VALUES ('$tendangnhap', '$matkhau', '$hoten', '$email', '$sdt', '$diachi')";
+        $query = "INSERT INTO danhmuc (TenDanhMuc, MoTa) VALUES ('$TenDanhMuc', '$MoTa')";
         $result = mysqli_query($conn, $query);
 
         // Kiểm tra và hiển thị thông báo tương ứng
         if ($result) {
-            $message = "Tạo người dùng thành công!";
+            $message = "Tạo danh mục thành công!";
         } else {
-            $message = "Lỗi! Không thể tạo người dùng.";
+            $message = "Lỗi! Không thể tạo danh mục.";
         }
     }
   ?>
@@ -87,6 +83,14 @@
                 <span class="nav-link-text ms-1">Quản lý blog</span>
             </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link text-white " href="admin_comment.php">
+                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="material-icons opacity-10">table_view</i>
+                </div>
+                <span class="nav-link-text ms-1">Quản lý đánh giá</span>
+            </a>
+            </li>
         </div>
     </aside>
         <main class="main-content border-radius-lg ">
@@ -110,14 +114,14 @@
             <form action="" method="post">
                 <div class="input-group input-group-static mb-4">
                     <label>Tên danh mục</label>
-                    <input type="text" name="tendangnhap" class="form-control">
+                    <input type="text" name="tendanhmuc" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
                     <label>Mô tả</label>
-                    <input type="text" name="matkhau" class="form-control">
+                    <textarea type="text" name="mota" class="form-control" rows="3"></textarea>
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-outline-primary" onclick="location.href='admin_add_users.php';">Tạo mới</button>
+                    <button type="submit" class="btn btn-outline-primary" onclick="location.href='admin_add_category.php';">Tạo mới</button>
                 </div>
             </form>
         </div>

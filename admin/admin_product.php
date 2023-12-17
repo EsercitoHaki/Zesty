@@ -7,6 +7,10 @@
   <?php
     include_once('../components/assets_admin.php');
     include_once('../components/connection.php');
+    if (isset($_GET['message'])) {
+        $message = $_GET['message'];
+        $result = isset($_GET['result']) ? $_GET['result'] : 'danger';
+    }
   ?>
 </head>
 
@@ -67,6 +71,14 @@
                 <span class="nav-link-text ms-1">Quản lý blog</span>
             </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link text-white " href="admin_comment.php">
+                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="material-icons opacity-10">table_view</i>
+                </div>
+                <span class="nav-link-text ms-1">Quản lý đánh giá</span>
+            </a>
+            </li>
         </div>
     </aside>
         <main class="main-content border-radius-lg ">
@@ -82,6 +94,11 @@
             <div>
                 <button type="button" class="btn btn-outline-primary" onclick="location.href='admin_add_product.php';">Tạo mới</button>
             </div>
+            <?php if (isset($message)) : ?>
+                <div class="alert alert-<?php echo ($result) ? 'success' : 'danger'; ?> mt-3">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
             <div class="card">
                 <div class="table-responsive">
                     <table class="table align-items-center mb-0">
@@ -119,7 +136,7 @@
                                     echo "<td>" . ($row['TrangThai'] == 1 ? 'Đang hoạt động' : 'Không hoạt động') . "</td>";
 
                                     echo "<td>" . $row['MaDanhMuc'] . "-" . $row['TenDanhMuc'] . "</td>";
-                                    echo "<td><a href='admin_edit_user.php?id=" . $row['MaSanPham'] . "'>Sửa</a> | <a href='admin_delete_user.php?id=" . $row['MaSanPham'] . "'>Xóa</a></td>";
+                                    echo "<td><a href='admin_edit_product.php?id=" . $row['MaSanPham'] . "'>Sửa</a> | <a href='admin_delete_product.php?id=" . $row['MaSanPham'] . "'>Xóa</a></td>";
                                     echo "</tr>";
                                 }
 
