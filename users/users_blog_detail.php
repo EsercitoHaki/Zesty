@@ -16,7 +16,17 @@
 	</head>
 
 	<body>
+	<?php
 
+// Lấy thông tin của blog từ URL (giả sử là truyền qua biến GET với tên là 'blog_id')
+$blog_id = $_GET['blog_id']; // Bạn cần kiểm tra và xử lý dữ liệu đầu vào để tránh lỗ hổng bảo mật
+
+$sql = "SELECT * FROM blog WHERE MaBlog = $blog_id";
+$result = $conn->query($sql) or die("Can't get recordset");
+
+if ($result->num_rows > 0) {
+	$row = $result->fetch_assoc();
+	?>
 		<!-- Start Header/Navigation -->
 		
 		<!-- End Header/Navigation -->
@@ -27,14 +37,12 @@
 					<div class="row justify-content-between">
 						<div class="col-lg-5">
 							<div class="intro-excerpt">
-								<h1>Blog</h1>
-								<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-								<p><a href="" class="btn btn-secondary me-2">Shop Now</a><a href="#" class="btn btn-white-outline">Explore</a></p>
+							<h1 class="section-title"><?php echo $row["Title"]; ?></h1>
 							</div>
 						</div>
 						<div class="col-lg-7">
 							<div class="hero-img-wrap">
-								<img src="images/couch.png" class="img-fluid">
+								<img src="../images/Blog/rau.png" class="img-fluid">
 							</div>
 						</div>
 					</div>
@@ -45,27 +53,16 @@
 		
 
 		<!-- Start Blog Section -->
-		<?php
-
-            // Lấy thông tin của blog từ URL (giả sử là truyền qua biến GET với tên là 'blog_id')
-            $blog_id = $_GET['blog_id']; // Bạn cần kiểm tra và xử lý dữ liệu đầu vào để tránh lỗ hổng bảo mật
-
-            $sql = "SELECT * FROM blog WHERE MaBlog = $blog_id";
-            $result = $conn->query($sql) or die("Can't get recordset");
-
-            if ($result->num_rows > 0) {
-                $row = $result->fetch_assoc();
-                ?>
+		
                 <div class="why-choose-section">
                     <div class="container">
                         <div class="row justify-content-between">
                             <div class="col-lg-6">
-                                <h2 class="section-title"><?php echo $row["Title"]; ?></h2>
                                 <p><?php echo $row["NoiDung"]; ?></p>
                             </div>
 
                             <div class="col-lg-5">
-                                <div class="img-wrap">
+                                <div class="img-wrap" style="padding-bottom: 20px;padding-top: 20px;">
                                     <img src="../images/Blog/<?php echo $row['AnhBlog']; ?>" alt="Image" class="img-fluid">
                                 </div>
                             </div>

@@ -193,7 +193,7 @@
                 </div>
             </form>
         </div>
-    </div><div id="alert" class="alert alert-danger d-none" role="alert">
+    </div><div id="alert" class="alert alert-danger d-none" role="alert" style="color: black;">
         Vui lòng chọn loại người dùng
 </div>
     <script>
@@ -204,6 +204,7 @@ document.querySelector('form').addEventListener('submit', function(e) {
     }
 });
 </script>
+
     <script src="../assets_admin/js/core/popper.min.js"></script>
     <script src="../assets_admin/js/core/bootstrap.min.js"></script>
     <script src="../assassets_adminets/js/plugins/perfect-scrollbar.min.js"></script>

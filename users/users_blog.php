@@ -26,7 +26,7 @@
 						</div>
 						<div class="col-lg-7">
 							<div class="hero-img-wrap">
-							<img src="../images/Blog/hero.png" class="img-fluid" style="max-width: 70%; margin-left: 100px;">							</div>
+							<img src="../images/Blog/hero.png" class="img-fluid" style="max-width: 80%; margin-left: 240px; padding-bottom: 100px;">							</div>
 						</div>
 					</div>
 				</div>
@@ -37,7 +37,7 @@
 
 		<!-- Start Blog Section -->
 		<div class="blog-section">
-			<div class="container">
+			<div class="container" style="padding-top: 30px;">
 				
 				<div class="row">
 							<?php
