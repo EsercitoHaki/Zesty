@@ -26,8 +26,7 @@
 						</div>
 						<div class="col-lg-7">
 							<div class="hero-img-wrap">
-								<img src="../images/Blog/" class="img-fluid">
-							</div>
+							<img src="../images/Blog/hero.png" class="img-fluid" style="max-width: 70%; margin-left: 100px;">							</div>
 						</div>
 					</div>
 				</div>
