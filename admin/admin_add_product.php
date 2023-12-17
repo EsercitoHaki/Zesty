@@ -14,7 +14,7 @@
         $DinhLuong = $_POST['dinhluong'];
         $ThongTin = $_POST['thongtin'];
         $MaDanhMuc = $_POST['madanhmuc'];
-
+        $HoatDong = isset($_POST['hoatdong']) ? 1 : 0;
 
         $file = $_FILES['filename'];
             $size_allow = 10; //Cho phép 10MB
@@ -45,12 +45,13 @@
                 $errors[] = 'ext_err';
             }
 
-        // Thực hiện truy vấn để thêm mới thành viên
-        $query = "INSERT INTO thanhvien (TenDangNhap, MatKhau, HoTen, Email, SDT, DiaChiNhanHang) VALUES ('$tendangnhap', '$matkhau', '$hoten', '$email', '$sdt', '$diachi')";
-        $result = mysqli_query($conn, $query);
+        $sqlInsert = "INSERT INTO sanpham (TenSanPham, Gia, DinhLuong, ThongTin, MaDanhMuc, HoatDong, Anh) 
+        VALUES ('$TenSanPham', '$Gia', '$DinhLuong', '$ThongTin', '$MaDanhMuc', '$HoatDong', '$new_file')";
+        $resultInsert = $conn->query($sqlInsert);
+
 
         // Kiểm tra và hiển thị thông báo tương ứng
-        if ($result) {
+        if ($resultInsert) {
             $message = "Tạo người dùng thành công!";
         } else {
             $message = "Lỗi! Không thể tạo người dùng.";
@@ -161,7 +162,7 @@
                 <div class="input-group input-group-static mb-4">
                     <div class="input-group input-group-static mb-4">
                         <label for="exampleFormControlSelect1" class="ms-0">Danh mục</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                        <select name="madanhmuc" class="form-control" id="exampleFormControlSelect1">
                             <?php
                                 $sqlDM = "SELECT * FROM danhmuc";
                                 $resultDanhMuc = $conn->query($sqlDM) or die("Can't get categories");
