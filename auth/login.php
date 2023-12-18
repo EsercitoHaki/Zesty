@@ -133,8 +133,8 @@
         .btn-login {
             width: 100%;
             padding: 10px;
-            background-color: #163020;
-            color: #fff;
+            background-color: #FFC933;
+            color: #000;
             border: none;
             border-radius: 7px;
             cursor: pointer;

@@ -1,33 +1,49 @@
 <?php
+echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+$ThoiGianDatHang = date('Y-m-d H:i:s');
+$TrangThai = 0;
+$MaThanhVien = $_POST['MaThanhVien'];
+$MaPhuongThuc = $_POST['MaPhuongThuc'];
+$MaGioHangArray = $_POST['MaGioHang']; // Retrieve the array from the hidden input
+$TenNguoiNhan = $_POST['TenNguoiNhan'];
+$DiaChiNhanHang = $_POST['DiaChiNhanHang'];
+$SDT = $_POST['SDT'];
+$GhiChu = $_POST['GhiChu'];
 include_once('../components/connection.php');
-// Insert into donhang table
-$query = "INSERT INTO donhang (MaThanhVien, MaGioHang, TrangThai, ThoiGianDatHang, TenNguoiNhan, DiaChiNhanHang, SDT, GhiChu) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($query);
-$stmt->bind_param("iissssss", $MaThanhVien, $MaGioHang, $TrangThai, $ThoiGianDatHang, $TenNguoiNhan, $DiaChiNhanHang, $SDT, $GhiChu);
-$stmt->execute();
+if (isset($_POST['MaGioHang']) && is_array($_POST['MaGioHang'])) {
+    foreach ($_POST['MaGioHang'] as $maGioHang) {
+        // Insert into donhang table
+        $query = "INSERT INTO donhang (MaThanhVien, MaGioHang, TrangThai, ThoiGianDatHang, TenNguoiNhan, DiaChiNhanHang, SDT, GhiChu, MaPhuongThuc) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("iisssssss", $MaThanhVien, $maGioHang, $TrangThai, $ThoiGianDatHang, $TenNguoiNhan, $DiaChiNhanHang, $SDT, $GhiChu, $MaPhuongThuc);
+        $stmt->execute();
 
-// Get the ID of the last inserted row
-$MaDonHang = $conn->insert_id;
+        // Get the ID of the last inserted row
+        $MaDonHang = $conn->insert_id;
 
-// Insert into ctdonhang table
-$query = "INSERT INTO ctdonhang (MaDonHang, MaSanPham, MaGioHang, SoLuong, GiaMoiSP) VALUES (?, ?, ?, ?, ?)";
-$stmt = $conn->prepare($query);
+        // Insert into ctdonhang table
+        $query = "INSERT INTO ctdonhang (MaDonHang, MaSanPham, MaGioHang, SoLuong, GiaMoiSP) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($query);
 
-// Assuming $items is an array of items in the cart
-foreach ($items as $item) {
-    $stmt->bind_param("iiidi", $MaDonHang, $item['MaSanPham'], $MaGioHang, $item['SoLuong'], $item['Gia']);
-    $stmt->execute();
+        // Fetch the cart items from the session
+        $items = isset($_SESSION['cart_item']) ? $_SESSION['cart_item'] : [];
+
+        foreach ($items as $item) {
+            $MaSanPham = $item['MaMonAn'];
+            $SoLuong = $item['SoLuong'];
+            $GiaMoiSP = $item['SoLuong'] * $item['Gia'];
+            $stmt->bind_param("iiidi", $MaDonHang, $MaSanPham, $maGioHang, $SoLuong, $GiaMoiSP);
+            $stmt->execute();
+        }
+    }
 }
-
-$stmt->close();
 ?>
-<!-- /*
-* Bootstrap 5
-* Template Name: Furni
-* Template Author: Untree.co
-* Template URI: https://untree.co/
-* License: https://creativecommons.org/licenses/by/3.0/
-*/ -->
+
+<?php 
+include_once('../components/header_user.php');
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -40,62 +56,18 @@ $stmt->close();
   <meta name="keywords" content="bootstrap, bootstrap4" />
 
 		<!-- Bootstrap CSS -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="../assets/css/bootstrap.min.css" rel="stylesheet">
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-		<link href="css/tiny-slider.css" rel="stylesheet">
-		<link href="css/style.css" rel="stylesheet">
-		<title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+		<link href="../assets/css/tiny-slider.css" rel="stylesheet">
+		<link href="../assets/css/style.css" rel="stylesheet">
+		<title>Cảm ơn </title>
 	</head>
 
 	<body>
 
-		<!-- Start Header/Navigation -->
-		<nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
-
-			<div class="container">
-				<a class="navbar-brand" href="index.html">Furni<span>.</span></a>
-
-				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarsFurni">
-					<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-						<li class="nav-item ">
-							<a class="nav-link" href="index.html">Home</a>
-						</li>
-						<li><a class="nav-link" href="shop.html">Shop</a></li>
-						<li><a class="nav-link" href="about.html">About us</a></li>
-						<li><a class="nav-link" href="services.html">Services</a></li>
-						<li><a class="nav-link" href="blog.html">Blog</a></li>
-						<li><a class="nav-link" href="contact.html">Contact us</a></li>
-					</ul>
-
-					<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-						<li><a class="nav-link" href="#"><img src="images/user.svg"></a></li>
-						<li><a class="nav-link" href="cart.html"><img src="images/cart.svg"></a></li>
-					</ul>
-				</div>
-			</div>
-				
-		</nav>
-		<!-- End Header/Navigation -->
 
 		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Cart</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
-					</div>
-				</div>
-			</div>
+			
 		<!-- End Hero Section -->
 
 		
