@@ -5,11 +5,11 @@
         $Tendangnhap = $_POST['tendangnhap'];
         $Matkhau = $_POST['matkhau'];
         $userType = $_POST['user_type'];
-
+    
         if ($userType == 'admin') {
             $query = "SELECT * FROM admin WHERE TenDangNhap = '$Tendangnhap' AND MatKhau = '$Matkhau'";
             $result = mysqli_query($conn, $query);
-
+    
             if (mysqli_num_rows($result) == 1) {
                 $row = mysqli_fetch_assoc($result);
                 $MaAdmin = $row['MaAdmin'];
@@ -19,14 +19,14 @@
                 header("Location: ../admin/admin_users_list.php?id=$MaAdmin");
                 exit();
             } else {
-                $_SESSION['Error'] = "Sai tên đăng nhập hoặc mật khẩu";
+                $_SESSION['message'] = '<div class="alert alert-danger" role="alert" style="color:white;">Sai tên đăng nhập hoặc mật khẩu rồi kìa</div>';
                 header("Location: login.php");
                 exit();
             }
         } elseif ($userType == 'thanhvien') {
             $query = "SELECT * FROM thanhvien WHERE TenDangNhap = '$Tendangnhap' AND MatKhau = '$Matkhau'";
             $result = mysqli_query($conn, $query);
-
+    
             if (mysqli_num_rows($result) == 1) {
                 $row = mysqli_fetch_assoc($result);
                 $MaThanhVien = $row['MaThanhVien'];
@@ -36,7 +36,7 @@
                 header("Location: ../users/users_home.php");
                 exit();
             } else {
-                echo "Sai tên đăng nhập hoặc mật khẩu";
+                $_SESSION['message'] = '<div class="alert alert-danger" role="alert" style="color:white;">Sai tên đăng nhập hoặc mật khẩu rồi kìa</div>';
                 header("Location: login.php");
                 exit();
             }
@@ -158,6 +158,12 @@
         </div>
         <!-- Phần đăng nhập bên phải -->
         <div class="login-container">
+        <?php
+    if (isset($_SESSION['message'])) {
+        echo $_SESSION['message'];
+        unset($_SESSION['message']);  // remove the message from session
+    }
+    ?>
             <div class="card-header">
                 <h3>Dấu Ấn Nấu Ăn - Nguyên Liệu Cho Hương Vị Tuyệt Vời</h3>
             </div>

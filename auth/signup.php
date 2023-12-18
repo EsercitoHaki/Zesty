@@ -4,28 +4,42 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $Tendangnhap = $_POST['tendangnhap'];
         $Matkhau = $_POST['matkhau'];
-        $userType = $_POST['user_type'];
-
+    
         // Check if all fields are filled
-        if (empty($Tendangnhap) || empty($Matkhau) || empty($userType)) {
-            $_SESSION['message'] = '<div class="alert alert-danger" role="alert" style="color:white;">Vui lòng nhập đủ thông tin</div>';   
+        if (empty($Tendangnhap) || empty($Matkhau)) {
+            $_SESSION['message'] = '<div class="alert alert-danger" role="alert">Vui lòng nhập đủ thông tin</div>';
             header("Location: signup.php");
             exit();
         } else {
-            if ($userType == 'thanhvien') {
+            // Check if username already exists
+            $query = "SELECT * FROM thanhvien WHERE TenDangNhap = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("s", $Tendangnhap);
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            if ($result->num_rows > 0) {
+                // Username already exists
+                $_SESSION['message'] = '<div class="alert alert-danger" role="alert" style="color:white;">Tên đăng nhập đã tồn tại</div>';
+                header("Location: signup.php");
+                exit();
+            } else {
                 // Insert new user into thanhvien table
                 $query = "INSERT INTO thanhvien (TenDangNhap, MatKhau) VALUES (?, ?)";
                 $stmt = $conn->prepare($query);
                 $stmt->bind_param("ss", $Tendangnhap, $Matkhau);
                 $stmt->execute();
-
+    
                 if ($stmt->affected_rows == 1) {
                     // User successfully registered
                     $_SESSION['TenDangNhap'] = $Tendangnhap;
                     $_SESSION['user_type'] = 'thanhvien';
-                    $_SESSION['message'] = '<div class="alert alert-success" role="alert">Đăng ký thành công</div>';                } else {
+                    $_SESSION['message'] = '<div class="alert alert-success" role="alert" style="color:white;">Đăng ký thành công</div>';
+                    header("Location: login.php");
+                    exit();
+                } else {
                     // Registration failed
-                    echo '<div class="alert alert-danger" role="alert">Đăng ký thất bại</div>';
+                    $_SESSION['message'] = '<div class="alert alert-danger" role="alert">Đăng ký thất bại</div>';
                     header("Location: signup.php");
                     exit();
                 }
