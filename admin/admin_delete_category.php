@@ -14,27 +14,27 @@
             $id = $_GET['id'];
 
             // Kiểm tra xem người dùng có tồn tại không
-            $check_query = "SELECT * FROM thanhvien WHERE MaThanhVien = '$id'";
+            $check_query = "SELECT * FROM danhmuc WHERE MaDanhMuc = '$id'";
             $check_result = mysqli_query($conn, $check_query);
 
             if (mysqli_num_rows($check_result) > 0) {
                 // Người dùng tồn tại, thực hiện xoá
-                $delete_query = "DELETE FROM thanhvien WHERE MaThanhVien = '$id'";
+                $delete_query = "DELETE FROM danhmuc WHERE MaDanhMuc = '$id'";
                 $delete_result = mysqli_query($conn, $delete_query);
 
                 if ($delete_result) {
-                    $message = "Xoá người dùng thành công!";
+                    $message = "Xoá danh mục thành công!";
                     $result = 'success';
                 } else {
-                    $message = "Lỗi! Không thể xoá người dùng do đang có đơn hàng.";
+                    $message = "Lỗi! Không thể xoá danh mục do đang có đơn hàng.";
                     $result = 'danger';
                 }
             } else {
-                $message = "Người dùng không tồn tại!";
+                $message = "Danh mục không tồn tại!";
                 $result = 'danger';
             }
         } else {
-            $message = "Lỗi! Không có thông tin người dùng để xoá.";
+            $message = "Lỗi! Không có thông tin danh mục để xoá.";
             $result = 'danger';
         }
 
@@ -42,7 +42,7 @@
         mysqli_close($conn);
 
         // Chuyển hướng về trang admin_users_list.php và truyền thông điệp
-        header("Location: admin_users_list.php?message=" . urlencode($message) . "&result=" . urlencode($result));
+        header("Location: admin_category.php?message=" . urlencode($message) . "&result=" . urlencode($result));
         exit();
     ?>
 </body>

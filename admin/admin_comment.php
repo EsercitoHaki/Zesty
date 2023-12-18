@@ -7,6 +7,11 @@
   <?php
     include_once('../components/assets_admin.php');
     include_once('../components/connection.php');
+    // Kiểm tra xem có thông điệp từ trang admin_delete_user.php không
+    if (isset($_GET['message'])) {
+        $message = $_GET['message'];
+        $result = isset($_GET['result']) ? $_GET['result'] : 'danger';
+    }
   ?>
 </head>
 
@@ -25,7 +30,7 @@
         <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
             <li class="nav-item">
-            <a class="nav-link text-white active bg-gradient-primary" href="admin_users_list.php">
+            <a class="nav-link text-white " href="admin_users_list.php">
                 <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                     <i class="material-icons opacity-10">table_view</i>
                 </div>
@@ -67,6 +72,14 @@
                 <span class="nav-link-text ms-1">Quản lý blog</span>
             </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link text-white active bg-gradient-primary" href="admin_blog.php">
+                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="material-icons opacity-10">table_view</i>
+                </div>
+                <span class="nav-link-text ms-1">Quản lý đánh giá</span>
+            </a>
+            </li>
         </div>
     </aside>
         <main class="main-content border-radius-lg ">
@@ -79,40 +92,40 @@
         <!-- End Navbar -->
         <div class="container-fluid py-4">
             <h3>Danh sách người dùng</h3>
-            <div>
-                <button type="button" class="btn btn-outline-primary" onclick="location.href='admin_add_users.php';">Tạo mới</button>
-            </div>
+            <?php if (isset($message)) : ?>
+                <div class="alert alert-<?php echo ($result) ? 'success' : 'danger'; ?> mt-3">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
             <div class="card">
                 <div class="table-responsive">
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">#</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tên đăng nhập</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Mật khẩu</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Họ tên</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Số điện thoại</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Địa chỉ</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tên thành viên</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tiêu đề</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nội dung</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Hài lòng</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Xử lý</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                                $query = "SELECT * FROM thanhvien";
+                                $query = "SELECT danhgia.*, thanhvien.HoTen 
+                                FROM danhgia 
+                                JOIN thanhvien ON danhgia.MaThanhVien = thanhvien.MaThanhVien";
                                 $result = mysqli_query($conn, $query);
 
                                 if ($result) {
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
-                                        echo "<td>" . $row['MaThanhVien'] . "</td>";
-                                        echo "<td>" . $row['TenDangNhap'] . "</td>";
-                                        echo "<td>" . $row['MatKhau'] . "</td>";
+                                        echo "<td>" . $row['MaDanhGia'] . "</td>";
                                         echo "<td>" . $row['HoTen'] . "</td>";
-                                        echo "<td>" . $row['Email'] . "</td>";
-                                        echo "<td>" . $row['SDT'] . "</td>";
-                                        echo "<td>" . $row['DiaChiNhanHang'] . "</td>";
-                                        echo "<td><a href='admin_edit_users.php?id=" . $row['MaThanhVien'] . "'>Sửa</a> | <a href='admin_delete_user.php?id=" . $row['MaThanhVien'] . "'>Xóa</a></td>";
+                                        echo "<td>" . $row['TieuDe'] . "</td>";
+                                        echo "<td>" . $row['NoiDung'] . "</td>";
+                                        echo "<td>" . $row['HaiLong'] . "</td>";
+                                        echo "<td><a href='admin_delete_user.php?id=" . $row['MaDanhGia'] . "'>Xóa</a></td>";
                                         echo "</tr>";
                                     }
 

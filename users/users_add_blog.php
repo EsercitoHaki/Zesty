@@ -16,9 +16,7 @@
 
             $file = $_FILES['filename'];
             $size_allow = 10; //Cho phép 10MB
-            echo 'pre>';
-            print_r($file);
-            echo '</pre>';
+
 
             //Đổi tên trước khi upload 
             $filename = $file['name'];

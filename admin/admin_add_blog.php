@@ -7,18 +7,45 @@
   <?php
     include_once('../components/assets_admin.php');
     include_once('../components/connection.php');
-
+    session_start();
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $tendangnhap = $_POST['tendangnhap'];
-        $matkhau = $_POST['matkhau'];
-        $hoten = $_POST['hoten'];
-        $email = $_POST['email'];
-        $sdt = $_POST['sdt'];
-        $diachi = $_POST['diachi'];
+        $TenTieuDe = $_POST['tieude'];
+        $NoiDung = $_POST['noidung'];
+        $currentDate = date('Y-m-d H:i:s');
 
+        $file = $_FILES['filename'];
+            $size_allow = 10; //Cho phép 10MB
+
+
+            //Đổi tên trước khi upload 
+            $filename = $file['name'];
+            $filename = explode('.', $filename);
+            $ext = end($filename);
+            $new_file = $_POST['tieude'].'.'.$ext;
+            
+
+            $allow_ext = ['png', 'jpg', 'jpeg', 'gif', 'ppt'];
+            if(in_array($ext, $allow_ext)){
+                //Thoả mãn điều kiện định dạng
+                $size = $file['size']/1024/1024; //Đổi từ byte sang MB
+
+                if($size<=$size_allow){
+                    //Thoả mãn điều kiện size
+
+                    $upload = move_uploaded_file($file['tmp_name'], '../images/Blog/'.$new_file);
+                    if(!$upload){
+                        $errors = 'upload_err';
+                    }
+                }else{
+                    $errors = 'size_err';
+                }
+            }else{
+                $errors[] = 'ext_err';
+            }
+            $MaAdmin = isset($_SESSION['MaAdmin']) ? $_SESSION['MaAdmin'] : null;
         // Thực hiện truy vấn để thêm mới thành viên
-        $query = "INSERT INTO thanhvien (TenDangNhap, MatKhau, HoTen, Email, SDT, DiaChiNhanHang) VALUES ('$tendangnhap', '$matkhau', '$hoten', '$email', '$sdt', '$diachi')";
-        $result = mysqli_query($conn, $query);
+        $query = "INSERT INTO blog (MaAdmin, Title, NoiDung, NgayDang, AnhBlog) VALUES ('$MaAdmin', '$TenTieuDe', '$NoiDung', '$currentDate', '$new_file')";
+                $result = mysqli_query($conn, $query);
 
         // Kiểm tra và hiển thị thông báo tương ứng
         if ($result) {
@@ -87,6 +114,14 @@
                 <span class="nav-link-text ms-1">Quản lý blog</span>
             </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link text-white " href="admin_comment.php">
+                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="material-icons opacity-10">table_view</i>
+                </div>
+                <span class="nav-link-text ms-1">Quản lý đánh giá</span>
+            </a>
+            </li>
         </div>
     </aside>
         <main class="main-content border-radius-lg ">
@@ -98,7 +133,7 @@
 
         <!-- End Navbar -->
         <div class="container-fluid py-4">
-            <h3>Tạo người dùng</h3>
+            <h3>Tạo Blog</h3>
             <?php if (isset($message)) : ?>
                 <div class="alert alert-<?php echo ($result) ? 'success' : 'danger'; ?> mt-3">
                     <?php echo $message; ?>
@@ -107,33 +142,21 @@
             <div>
                 <button type="button" class="btn btn-outline-primary" onclick="location.href='admin_users_list.php';">Trở về</button>
             </div>
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="input-group input-group-static mb-4">
-                    <label>Tên đăng nhập</label>
-                    <input type="text" name="tendangnhap" class="form-control">
+                    <label>Tên blog</label>
+                    <input type="text" name="tieude" class="form-control">
                 </div>
                 <div class="input-group input-group-static mb-4">
-                    <label>Mật khẩu</label>
-                    <input type="text" name="matkhau" class="form-control">
+                    <label>Nội dung</label>
+                    <textarea type="text" name="noidung" class="form-control" rows="3"></textarea>
                 </div>
                 <div class="input-group input-group-static mb-4">
-                    <label>Họ tên</label>
-                    <input type="text" name="hoten" class="form-control">
-                </div>
-                <div class="input-group input-group-static mb-4">
-                    <label>Email</label>
-                    <input type="text" name="email" class="form-control">
-                </div>
-                <div class="input-group input-group-static mb-4">
-                    <label>Số điện thoại</label>
-                    <input type="text" name="sdt" class="form-control">
-                </div>
-                <div class="input-group input-group-static mb-4">
-                    <label>Địa chỉ</label>
-                    <input type="text" name="diachi" class="form-control">
+                    <label>Ảnh</label>
+                    <input type="file" name="filename" class="form-control">
                 </div>
                 <div>
-                    <button type="submit" class="btn btn-outline-primary" onclick="location.href='admin_add_users.php';">Tạo mới</button>
+                    <button type="submit" class="btn btn-outline-primary" onclick="location.href='admin_add_blog.php';">Tạo mới</button>
                 </div>
             </form>
         </div>

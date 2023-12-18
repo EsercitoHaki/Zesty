@@ -11,9 +11,12 @@
             $result = mysqli_query($conn, $query);
 
             if (mysqli_num_rows($result) == 1) {
+                $row = mysqli_fetch_assoc($result);
+                $MaAdmin = $row['MaAdmin'];
+                $_SESSION['MaAdmin'] = $MaAdmin;
                 $_SESSION['TenDangNhap'] = $Tendangnhap;
                 $_SESSION['user_type'] = 'admin';
-                header("Location: ../admin/admin_user_list.php");
+                header("Location: ../admin/admin_users_list.php?id=$MaAdmin");
                 exit();
             } else {
                 $_SESSION['Error'] = "Sai tên đăng nhập hoặc mật khẩu";
@@ -74,6 +77,7 @@
         }
 
         .image-container {
+            width: 100%;
             width: 100%;
             height: 100vh;
             overflow: hidden; /* Ngăn chặn cuộn xuống */
@@ -137,7 +141,9 @@
             color: #000;
             border: none;
             border-radius: 7px;
+            border-radius: 7px;
             cursor: pointer;
+            transition: all 0.3s ease-in-out;
             transition: all 0.3s ease-in-out;
         }
         .text-right {
@@ -164,6 +170,7 @@
                         <label class="form-label">Email/SDT</label>
                         <input type="text" name="tendangnhap" class="form-control" style="color: #163020;">
                     </div>
+                    <div class="input-group input-group-dynamic mb-4" >
                     <div class="input-group input-group-dynamic mb-4" >
                         <label class="form-label">Mật Khẩu</label>
                         <input type="password" name="matkhau" class="form-control" style="color: #163020;">

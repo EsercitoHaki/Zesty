@@ -7,6 +7,12 @@
   <?php
     include_once('../components/assets_admin.php');
     include_once('../components/connection.php');
+
+    // Kiểm tra xem có thông điệp từ trang admin_delete_user.php không
+    if (isset($_GET['message'])) {
+        $message = $_GET['message'];
+        $result = isset($_GET['result']) ? $_GET['result'] : 'danger';
+    }
   ?>
 </head>
 
@@ -67,6 +73,14 @@
                 <span class="nav-link-text ms-1">Quản lý blog</span>
             </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link text-white " href="admin_comment.php">
+                <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="material-icons opacity-10">table_view</i>
+                </div>
+                <span class="nav-link-text ms-1">Quản lý đánh giá</span>
+            </a>
+            </li>
         </div>
     </aside>
         <main class="main-content border-radius-lg ">
@@ -79,9 +93,11 @@
         <!-- End Navbar -->
         <div class="container-fluid py-4">
             <h3>Danh sách đơn hàng</h3>
-            <div>
-                <button type="button" class="btn btn-outline-primary" onclick="location.href='admin_add_cart.php';">Tạo mới</button>
-            </div>
+            <?php if (isset($message)) : ?>
+                <div class="alert alert-<?php echo ($result) ? 'success' : 'danger'; ?> mt-3">
+                    <?php echo $message; ?>
+                </div>
+            <?php endif; ?>
             <div class="card">
                 <div class="table-responsive">
                     <table class="table align-items-center mb-0">
@@ -89,26 +105,28 @@
                             <tr>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">#</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tên khách hàng</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Mã giỏ hàng</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Trạng thái</th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2"></th>
-                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Thời gian đặt</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Xử lý</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                                $query = "SELECT * FROM donhang";
+                                $query = "SELECT donhang.*, thanhvien.HoTen 
+                                FROM donhang 
+                                JOIN thanhvien ON donhang.MaThanhVien = thanhvien.MaThanhVien";
                                 $result = mysqli_query($conn, $query);
 
                                 if ($result) {
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         echo "<tr>";
                                         echo "<td>" . $row['MaDonHang'] . "</td>";
-                                        echo "<td>" . $row['MaThanhVien'] . "</td>";
+                                        echo "<td>" . $row['HoTen'] . "</td>";
                                         echo "<td>" . $row['MaGioHang'] . "</td>";
                                         echo "<td>" . $row['TrangThai'] . "</td>";
                                         echo "<td>" . $row['ThoiGianDatHang'] . "</td>";
-                                        echo "<td><a href='admin_edit_users.php?id=" . $row['MaDonHang'] . "'>Sửa</a> | <a href='admin_delete_user.php?id=" . $row['MaDonHang'] . "'>Xóa</a></td>";
+                                        echo "<td><a href='admin_edit_cart.php?id=" . $row['MaDonHang'] . "'>Sửa</a> | <a href='admin_delete_cart.php?id=" . $row['MaDonHang'] . "'>Xóa</a></td>";
                                         echo "</tr>";
                                     }
 
