@@ -56,8 +56,10 @@ $resultUser = $conn->query($sqlUser) or die("Can't get recordset");
 			<form method="post" action="users_process_checkout.php">
 			<?php
     // Create the SQL query
-    $query = "SELECT MaGioHang FROM giohang WHERE MaThanhVien = $MaThanhVien";
-
+	$query = "SELECT giohang.MaGioHang, SanPham.MaSanPham 
+	FROM giohang 
+	INNER JOIN SanPham ON giohang.MaSanPham = SanPham.MaSanPham 
+	WHERE giohang.MaThanhVien = $MaThanhVien";
     // Execute the query
     $resultU = $conn->query($query);
 
@@ -70,11 +72,11 @@ $resultUser = $conn->query($sqlUser) or die("Can't get recordset");
         while ($row = $resultU->fetch_assoc()) {
             // Get MaGioHang from the row
             $maGioHang = $row['MaGioHang'];
-
+			$maSanPham = $row['MaSanPham'];
             // Store MaGioHang in the array
             $maGioHangArray[] = $maGioHang;
 
-            // Display MaGioHang (optional)
+			echo '<input type="text" name="MaSanPham[]" value="' . $maSanPham . '">';
             echo '<input type="text" name="MaGioHang[]" value="' . $maGioHang . '"><br>';
         }
 
@@ -158,6 +160,8 @@ $resultUser = $conn->query($sqlUser) or die("Can't get recordset");
 														<td><?php echo $row['SoLuong']; ?></td>
 														<td><?php echo $row['DinhLuong']; ?></td>
 														<td><?php echo number_format($row['Gia']); ?>đ</td>
+														<input type="hidden" name="SoLuong[]" value="<?php echo $row['SoLuong']; ?>">
+														<input type="hidden" name="Gia[]" value="<?php echo $row['Gia']; ?>">		
 													</tr>
 											<?php
 												}
