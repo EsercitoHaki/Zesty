@@ -35,7 +35,7 @@ $resultUser = $conn->query($sqlUser) or die("Can't get recordset");
 			<div class="row justify-content-between">
 				<div class="col-lg-5">
 					<div class="intro-excerpt">
-						<h1>Checkout</h1>
+						<h1>Thanh toán</h1>
 					</div>
 				</div>
 				<div class="col-lg-7">
@@ -76,8 +76,8 @@ $resultUser = $conn->query($sqlUser) or die("Can't get recordset");
             // Store MaGioHang in the array
             $maGioHangArray[] = $maGioHang;
 
-			echo '<input type="text" name="MaSanPham[]" value="' . $maSanPham . '">';
-            echo '<input type="text" name="MaGioHang[]" value="' . $maGioHang . '"><br>';
+			echo '<input type="hidden" name="MaSanPham[]" value="' . $maSanPham . '">';
+            echo '<input type="hidden" name="MaGioHang[]" value="' . $maGioHang . '"><br>';
         }
 
         // Store the array in a hidden input field

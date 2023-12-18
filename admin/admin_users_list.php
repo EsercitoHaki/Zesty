@@ -129,7 +129,7 @@
                                         echo "<td>" . $row['HoTen'] . "</td>";
                                         echo "<td>" . $row['Email'] . "</td>";
                                         echo "<td>" . $row['SDT'] . "</td>";
-                                        echo "<td>" . $row['DiaChiNhanHang'] . "</td>";
+                                        echo "<td>" . $row['DiaChi'] . "</td>";
                                         echo "<td><a href='admin_edit_users.php?id=" . $row['MaThanhVien'] . "'>Sửa</a> | <a href='admin_delete_user.php?id=" . $row['MaThanhVien'] . "'>Xóa</a></td>";
                                         echo "</tr>";
                                     }
