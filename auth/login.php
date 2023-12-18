@@ -141,9 +141,7 @@
             color: #000;
             border: none;
             border-radius: 7px;
-            border-radius: 7px;
             cursor: pointer;
-            transition: all 0.3s ease-in-out;
             transition: all 0.3s ease-in-out;
         }
         .text-right {
@@ -170,7 +168,6 @@
                         <label class="form-label">Email/SDT</label>
                         <input type="text" name="tendangnhap" class="form-control" style="color: #163020;">
                     </div>
-                    <div class="input-group input-group-dynamic mb-4" >
                     <div class="input-group input-group-dynamic mb-4" >
                         <label class="form-label">Mật Khẩu</label>
                         <input type="password" name="matkhau" class="form-control" style="color: #163020;">
@@ -200,7 +197,8 @@
                 </div>
             </form>
         </div>
-    </div><div id="alert" class="alert alert-danger d-none" role="alert" style="color: black;">
+    </div>
+    <div id="alert" class="alert alert-danger d-none" role="alert" style="color: black;">
         Vui lòng chọn loại người dùng
 </div>
     <script>
