@@ -6,36 +6,29 @@
         $Matkhau = $_POST['matkhau'];
         $userType = $_POST['user_type'];
 
-        if ($userType == 'admin') {
-            $query = "SELECT * FROM admin WHERE TenDangNhap = '$Tendangnhap' AND MatKhau = '$Matkhau'";
-            $result = mysqli_query($conn, $query);
+        // Check if all fields are filled
+        if (empty($Tendangnhap) || empty($Matkhau) || empty($userType)) {
+            $_SESSION['message'] = '<div class="alert alert-danger" role="alert" style="color:white;">Vui lòng nhập đủ thông tin</div>';   
+            header("Location: signup.php");
+            exit();
+        } else {
+            if ($userType == 'thanhvien') {
+                // Insert new user into thanhvien table
+                $query = "INSERT INTO thanhvien (TenDangNhap, MatKhau) VALUES (?, ?)";
+                $stmt = $conn->prepare($query);
+                $stmt->bind_param("ss", $Tendangnhap, $Matkhau);
+                $stmt->execute();
 
-            if (mysqli_num_rows($result) == 1) {
-                $_SESSION['TenDangNhap'] = $Tendangnhap;
-                $_SESSION['user_type'] = 'admin';
-                header("Location: ../admin/admin_user_list.php");
-                exit();
-            } else {
-                $_SESSION['Error'] = "Sai tên đăng nhập hoặc mật khẩu";
-                header("Location: login.php");
-                exit();
-            }
-        } elseif ($userType == 'thanhvien') {
-            $query = "SELECT * FROM thanhvien WHERE TenDangNhap = '$Tendangnhap' AND MatKhau = '$Matkhau'";
-            $result = mysqli_query($conn, $query);
-
-            if (mysqli_num_rows($result) == 1) {
-                $row = mysqli_fetch_assoc($result);
-                $MaThanhVien = $row['MaThanhVien'];
-                $_SESSION['TenDangNhap'] = $Tendangnhap;
-                $_SESSION['MaThanhVien'] = $MaThanhVien;
-                $_SESSION['user_type'] = 'thanhvien';
-                header("Location: ../users/users_home.php");
-                exit();
-            } else {
-                echo "Sai tên đăng nhập hoặc mật khẩu";
-                header("Location: login.php");
-                exit();
+                if ($stmt->affected_rows == 1) {
+                    // User successfully registered
+                    $_SESSION['TenDangNhap'] = $Tendangnhap;
+                    $_SESSION['user_type'] = 'thanhvien';
+                    $_SESSION['message'] = '<div class="alert alert-success" role="alert">Đăng ký thành công</div>';                } else {
+                    // Registration failed
+                    echo '<div class="alert alert-danger" role="alert">Đăng ký thất bại</div>';
+                    header("Location: signup.php");
+                    exit();
+                }
             }
         }
     }
@@ -49,7 +42,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets_admin/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets_admin/img/favicon.png">
     <title>Signup Page</title>
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
     <link href="../assets_admin/css/nucleo-icons.css" rel="stylesheet" />
     <link href="../assets_admin/css/nucleo-svg.css" rel="stylesheet" />
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
@@ -76,9 +69,9 @@
         .image-container {
             width: 100%;
             height: 100vh;
-            overflow: hidden; /* Ngăn chặn cuộn xuống */
+            overflow: hidden; 
             position: relative;
-            margin-left: -320px; /* Đẩy hình ảnh sang trái */
+            margin-left: -320px; 
             
         }
 
@@ -86,7 +79,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: left; /* Điều chỉnh vị trí của ảnh */
+            object-position: left; 
         }
 
         .login-container {
@@ -106,7 +99,7 @@
         }
 
         .card-header h3 {
-            color: black; /* Màu trắng cho thẻ h3 */
+            color: black; 
         }
 
         .card-body {
@@ -149,11 +142,15 @@
 <body>
     <div class="container">
         <div class="image-container">
-            <!-- Đặt hình ảnh của bạn ở đây -->
             <img src="../assets/images/4901804.jpg" alt="Background Image">
         </div>
-        <!-- Phần đăng nhập bên phải -->
         <div class="login-container">
+        <?php
+    if (isset($_SESSION['message'])) {
+        echo $_SESSION['message'];
+        unset($_SESSION['message']); 
+    }
+    ?>
             <div class="card-header">
                 <h3>Dấu Ấn Nấu Ăn - Nguyên Liệu Cho Hương Vị Tuyệt Vời</h3>
             </div>
@@ -161,7 +158,7 @@
                 <!-- Các trường đăng nhập -->
                 <div class="card-body">
                     <div class="input-group input-group-dynamic mb-4">
-                        <label class="form-label">Email/SDT</label>
+                        <label class="form-label">Tên đăng nhập</label>
                         <input type="text" name="tendangnhap" class="form-control" style="color: #163020;">
                     </div>
                     <div class="input-group input-group-dynamic mb-4" >
@@ -170,10 +167,7 @@
                     </div>
                     <div class="form-check mb-3">
                     <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="user_type" id="customRadio1" value="admin">
-                        <label class="form-check-label" style="margin-right: 10px;" for="customRadio1">Admin</label>
-                        
-                        <input class="form-check-input" type="radio" name="user_type" id="customRadio2" value="thanhvien">
+                    <input class="form-check-input" type="radio" name="user_type" id="customRadio2" value="thanhvien">
                         <label class="form-check-label" style="margin-left: 10px;" for="customRadio2">Thành viên</label>
                     </div>
                     <div class="text-right">
